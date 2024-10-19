@@ -25,8 +25,6 @@
 3. **Chat With Big Bro**: Use the interactive chat interface to ask questions. **Big Bro** responds based on your course materials and general knowledge.
 4. **Switch Between Courses**: Each course maintains its own chat history, allowing you to switch back and forth without losing your conversation.
 
-[![asciicast](https://asciinema.org/a/fepTvXf1UiDpRUhhNiswL8isu.svg)](https://asciinema.org/a/fepTvXf1UiDpRUhhNiswL8isu)
-
 <p align="center">
     <img src="images/streamlit_bigbro.png" alt="Screenshot of UI" width="600">
 </p>
