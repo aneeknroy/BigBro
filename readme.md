@@ -1,10 +1,10 @@
-# Local LLM with RAG
+# Big Bro : Your Own Course Assistant
 
 <p align="center">
-    <img src="images/wizard_experimenting.jpg" alt="A wizard experimenting - Leonardo AI" width="600">
+    <img src="images/bigBros.png" alt="Your Big Bro" width="600">
 </p>
 
-This project is an experimental sandbox for testing out ideas related to running local Large Language Models (LLMs) with [Ollama](https://ollama.ai/) to perform Retrieval-Augmented Generation (RAG) for answering questions based on sample PDFs. In this project, we are also using Ollama to create embeddings with the [nomic-embed-text](https://ollama.com/library/nomic-embed-text) to use with [Chroma](https://docs.trychroma.com/). Please note that the embeddings are reloaded each time the application runs, which is not efficient and is only done here for testing purposes.
+This project is utilizing Retrieval-Augmented Generation (RAG) for answering questions based on course documents and helps organize that in a nice mannger. In this project, we are also using Ollama to create embeddings with the [nomic-embed-text](https://ollama.com/library/nomic-embed-text) to use with [Chroma](https://docs.trychroma.com/). Please note that the embeddings are reloaded each time the application runs, which is not efficient and is only done here for testing purposes.
 
 [![asciicast](https://asciinema.org/a/fepTvXf1UiDpRUhhNiswL8isu.svg)](https://asciinema.org/a/fepTvXf1UiDpRUhhNiswL8isu)
 
@@ -38,8 +38,8 @@ This will load the PDFs and Markdown files, generate embeddings, query the colle
 ## Running the Streamlit UI
 
 1. Ensure your virtual environment is activated.
-2. Navigate to the directory containing the `ui.py` script.
-3. Run the Streamlit application by executing `streamlit run ui.py` in your terminal.
+2. Navigate to the directory containing the `app.py` script.
+3. Run the Streamlit application by executing `streamlit run app.py` in your terminal.
 
 This will start a local web server and open a new tab in your default web browser where you can interact with the application. The Streamlit UI allows you to select models, select a folder, providing an easier and more intuitive way to interact with the RAG chatbot system compared to the command-line interface. The application will handle the loading of documents, generating embeddings, querying the collection, and displaying the results interactively.
 
