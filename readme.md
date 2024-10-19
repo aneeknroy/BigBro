@@ -28,7 +28,7 @@
 [![asciicast](https://asciinema.org/a/fepTvXf1UiDpRUhhNiswL8isu.svg)](https://asciinema.org/a/fepTvXf1UiDpRUhhNiswL8isu)
 
 <p align="center">
-    <img src="images/streamlit_ui.png" alt="Screenshot of UI" width="600">
+    <img src="images/streamlit_bigbro.png" alt="Screenshot of UI" width="600">
 </p>
 
 ## Requirements
