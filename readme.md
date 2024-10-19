@@ -42,17 +42,9 @@
 3. Activate the virtual environment by running `source .venv/bin/activate` on Unix or MacOS, or `.\.venv\Scripts\activate` on Windows.
 4. Install the required Python packages by running `pip install -r requirements.txt`.
 
+**Note:** The first time you run the project, it will download the necessary models from Ollama for the LLM and embeddings. This is a one-time setup.
+
 ## Running the Project
-
-**Note:** The first time you run the project, it will download the necessary models from Ollama for the LLM and embeddings. This is a one-time setup process and may take some time depending on your internet connection.
-
-1. Ensure your virtual environment is activated.
-2. Run the main script with `python app.py -m <model_name> -p <path_to_documents>` to specify a model and the path to documents. If no model is specified, it defaults to [mistral](https://ollama.com/library/mistral). If no path is specified, it defaults to `Research` located in the repository for example purposes.
-3. Optionally, you can specify the embedding model to use with `-e <embedding_model_name>`. If not specified, it defaults to [nomic-embed-text](https://ollama.com/library/nomic-embed-text).
-
-This will load the PDFs and Markdown files, generate embeddings, query the collection, and answer the question defined in `app.py`.
-
-## Running the Streamlit UI
 
 1. Ensure your virtual environment is activated.
 2. Navigate to the directory containing the `app.py` script.
