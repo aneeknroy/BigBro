@@ -1,7 +1,7 @@
 # Big Bro : Your Own Course Assistant
 
 <p align="center">
-    <img src="images/bigBros.png" alt="Your Big Bro" width="600">
+    <img src="images/bigBro.png" alt="Your Big Bro" width="600">
 </p>
 
 This project is utilizing Retrieval-Augmented Generation (RAG) for answering questions based on course documents and helps organize that in a nice mannger. In this project, we are also using Ollama to create embeddings with the [nomic-embed-text](https://ollama.com/library/nomic-embed-text) to use with [Chroma](https://docs.trychroma.com/). Please note that the embeddings are reloaded each time the application runs, which is not efficient and is only done here for testing purposes.
