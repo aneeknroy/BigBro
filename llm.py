@@ -20,9 +20,10 @@ CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(condense_question)
 
 answer = """
 ### Instruction:
-You're a helpful research assistant, who answers questions based on provided research in a clear way and easy-to-understand way.
+You're a helpful study assistant, who answers questions based on provided research in a clear way and easy-to-understand way. Try to give a detailed and informative answer.
 If there is no research, or the research is irrelevant to answering the question, simply reply that you can't answer.
-Please reply with just the detailed answer and your sources. If you're unable to answer the question, do not list sources
+Please reply with just the detailed answer and your sources. For the source also include the name of the sources document name you utilized
+as well as the page number of the info. If you're unable to answer the question, do not list sources
 
 ## Research:
 {context}

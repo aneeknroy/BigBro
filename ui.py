@@ -98,7 +98,10 @@ def chat_page():
     # Chat input handling
     if prompt := st.chat_input("Ask a question"):
         # Append the user message to the chat history
-        st.session_state[course_key].append({"role": "user", "content": prompt})
+        prompt_with_sources = f"{prompt}\n\nList the sources you utilized for the question above."
+
+        st.session_state[course_key].append({"role": "user", "content": prompt_with_sources})
+
         with st.chat_message("user"):
             st.markdown(prompt)
 
