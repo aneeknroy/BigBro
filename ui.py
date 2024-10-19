@@ -4,6 +4,7 @@ from langchain_community.llms import Ollama
 from document_loader import load_documents_into_database
 from models import get_list_of_models
 from llm import getStreamingChain
+import time
 
 EMBEDDING_MODEL = "nomic-embed-text"
 
@@ -14,22 +15,32 @@ def display_files_in_folder(upload_dir):
     # Mimic folder structure
     if os.path.exists(upload_dir):
         folder_name = os.path.basename(upload_dir)
-        st.sidebar.write(f"📁 **{folder_name}**")  # Display folder icon
-        
         files = os.listdir(upload_dir)
         if files:
-            for file in files:
-                file_path = os.path.join(upload_dir, file)
-                st.sidebar.write(f"   - {file}")  # Indent the file names
+            # Create a list of options for the selectbox
+            selectbox_options = [file for file in files]
         else:
-            st.sidebar.write("   - No files uploaded yet.")
+            selectbox_options = ["No files uploaded yet."]
+        
+        # Display the folder name and the files in a selectbox
+        st.sidebar.selectbox(
+            f"📁 **{folder_name}**",
+            selectbox_options,
+        )
     else:
         st.sidebar.write("No upload directory found.")
 
+
 # Function for handling chat page and multiple file uploads
 def chat_page():
-    # Display the course name at the top
     course_name = st.session_state['selected_course']
+    course_key = f"messages_{course_name.replace(' ', '_')}"  # Unique key for each course
+
+    # Initialize chat history for the selected course
+    if course_key not in st.session_state:
+        st.session_state[course_key] = []  # Initialize an empty message history for this course
+
+    # Display the course name at the top
     st.title(f"Chat for {course_name} - Big Bro")
 
     # Create a folder for the course if it doesn't exist
@@ -43,12 +54,13 @@ def chat_page():
 
     if uploaded_files:
         for uploaded_file in uploaded_files:
-            # Save each uploaded file to the course's folder
             file_path = os.path.join(upload_dir, uploaded_file.name)
             try:
                 with open(file_path, "wb") as f:
                     f.write(uploaded_file.getbuffer())
-                st.success(f"File {uploaded_file.name} uploaded to {upload_dir}")
+                success_message = st.empty()
+                success_message.success(f"File {uploaded_file.name} uploaded to {upload_dir}")
+                success_message.empty()  # Clear the message after 3 seconds
             except Exception as e:
                 st.error(f"Error uploading file: {e}")
 
@@ -66,54 +78,44 @@ def chat_page():
 
     # Use the uploaded folder path for document indexing
     st.sidebar.subheader("Document Indexing")
+    db_session_name = f"db_{course_name}"
     if st.sidebar.button("Index Uploaded Documents"):
-        if "db" not in st.session_state:
-            with st.spinner(
-                "Creating embeddings and loading documents into Chroma..."
-            ):
-                st.session_state["db"] = load_documents_into_database(
+        if db_session_name not in st.session_state:
+            with st.spinner("Creating embeddings and loading documents into Chroma..."):
+                st.session_state[db_session_name] = load_documents_into_database(
                     EMBEDDING_MODEL, upload_dir  # Indexing the uploaded folder
                 )
             st.info("All set to answer questions with indexed documents!")
 
-    # Display the uploaded files for the course in the sidebar
-    st.sidebar.subheader("Uploaded Files")
-    files = os.listdir(upload_dir)
-    if files:
-        for file in files:
-            file_path = os.path.join(upload_dir, file)
-            st.sidebar.write(f"- {file}", unsafe_allow_html=True)
-    else:
-        st.sidebar.write("No files uploaded yet.")
+    # Display the folder and files in the sidebar
+    display_files_in_folder(upload_dir)
 
-    # Initialize chat history
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-
-    # Display chat messages from history on app rerun
-    for message in st.session_state.messages:
+    # Display chat messages from history specific to the current course
+    for message in st.session_state[course_key]:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
     # Chat input handling
     if prompt := st.chat_input("Ask a question"):
-        st.session_state.messages.append({"role": "user", "content": prompt})
+        # Append the user message to the chat history
+        st.session_state[course_key].append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        with st.chat_message("assistant"):
-            stream = getStreamingChain(
-                prompt,
-                st.session_state.messages,
-                st.session_state["llm"],
-                st.session_state["db"],
-            )
-            response = st.write_stream(stream)
-            st.session_state.messages.append({"role": "assistant", "content": response})
+        try:
+            with st.chat_message("assistant"):
+                stream = getStreamingChain(
+                    prompt,
+                    st.session_state[course_key],
+                    st.session_state["llm"],
+                    st.session_state[db_session_name],
+                )
+                response = st.write_stream(stream)
+                st.session_state[course_key].append({"role": "assistant", "content": response})
+        except:
+            st.error('You must index your uploaded docs before asking questions', icon="🚨")
 
     # Back button to return to course selection
     if st.button("Back to Courses"):
         st.session_state['page'] = 'home'
         st.rerun()
-
-

@@ -1,15 +1,26 @@
 import streamlit as st
 import ui
+from datetime import datetime
 
-st.title('Big Bro')
+# Main Title
+st.title('👨‍🏫 Welcome to Big Bro')
 
-# Initialize an empty list to store courses
+# Introduction Section
+st.markdown("""
+## Meet **Big Bro** – Your Personal Academic Assistant
+
+**Big Bro** is here to help you master your classes, like that older sibling who always knows the answers! Unlike general chatbots, **Big Bro** focuses on your class-specific materials—assignments, notes, and exams. Whether you need help with homework or clarifying lecture notes, Big Bro has already "taken the class" and is ready to guide you to success.
+
+Let **Big Bro** handle the hard work, so you can focus on learning and acing your exams!
+""")
+
+# Initialize session states
 if 'courses' not in st.session_state:
     st.session_state['courses'] = []
 if 'text' not in st.session_state:
     st.session_state['text'] = ''
 if 'page' not in st.session_state:
-    st.session_state['page'] = 'home'  # Set the default page to 'home'
+    st.session_state['page'] = 'home'  # Default page is 'home'
 if 'selected_course' not in st.session_state:
     st.session_state['selected_course'] = ''  # Store the selected course for the chat page
 
@@ -17,13 +28,29 @@ if 'selected_course' not in st.session_state:
 def clear_text():
     st.session_state['text'] = "" 
 
+# Get the current year to generate year options
+current_year = datetime.now().year
+years = [str(year) for year in range(current_year + 10, current_year - 11, -1)]  # Next 10 years
+terms = [
+    "Fall", "Winter", "Spring", "Summer"
+]
+
 # Main Page - Course Input and Display
 if st.session_state['page'] == 'home':
-    # Input section for course details
-    st.title("Input Course Details")
-    course_name = st.text_input("Course Name", st.session_state['text'])
-    course_details = st.text_input("Course Details", st.session_state['text'])
-    course_semester = st.text_input("Course Semester", st.session_state['text'])
+    # Input section for course details with columns
+    st.write("---")
+    st.markdown("### Add Your Course Details")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        course_name = st.text_input("📚 Course Name", st.session_state['text'])
+        selected_month = st.selectbox("📅 Select Month", terms)
+        selected_year = st.selectbox("📅 Select Year", years, index=10)
+    with col2:
+        course_details = st.text_area("📝 Course Details", st.session_state['text'], height=206)
+        
+    # Combine selected month and year into a single string
+    course_semester = f"{selected_month} {selected_year}"
 
     # Button to add the course
     if st.button("Add Course"):
@@ -39,89 +66,38 @@ if st.session_state['page'] == 'home':
         else:
             st.error("Please fill in all fields.")
 
-    # Create tabs for each course
+    # Show the list of courses in tabs
     if st.session_state['courses']:
-        st.title("Courses")
-        course_tabs = st.tabs([course['name'] for course in st.session_state['courses']])
+        st.write("---")
+        st.title("📚 Your Courses")
+        course_tabs = st.tabs([f"**{course['name']}**" for course in st.session_state['courses']])
 
-        # Display the course details in each tab
+        # Predefined class images
+        class_images = {
+            "ECEN": "https://via.placeholder.com/150?text=ECEN",  # Placeholder URL for ECEN
+            "PHYS": "https://via.placeholder.com/150?text=PHYS",  # Placeholder URL for PHYS
+            "POLS": "https://via.placeholder.com/150?text=POLS",  # Placeholder URL for POLS
+            "default": "https://via.placeholder.com/150?text=Class"  # Default placeholder image
+        }
+
+        # Display course details in each tab
         for index, tab in enumerate(course_tabs):
             with tab:
-                st.subheader(st.session_state['courses'][index]['name'])
-                st.write(f"Details: {st.session_state['courses'][index]['details']}")
-                st.write(f"Semester: {st.session_state['courses'][index]['semester']}")
+                course = st.session_state['courses'][index]
+                course_code = course['name'].split()[0].upper()  # Extract course code for image selection
+                image_url = class_images.get(course_code, class_images["default"])
+
+                st.image(image_url, width=150)  # Display image
+                st.subheader(course['name'])
+                st.write(f"**Details**: {course['details']}")
+                st.write(f"**Semester**: {course['semester']}")
 
                 # Add a "Chat" button for each course tab
-                if st.button(f"Chat for {st.session_state['courses'][index]['name']}"):
-                    st.session_state['selected_course'] = st.session_state['courses'][index]['name']
+                if st.button(f"Chat for {course['name']}"):
+                    st.session_state['selected_course'] = course['name']
                     st.session_state['page'] = 'chat'  # Navigate to the chat page
                     st.rerun()  # Refresh to go to the new page
 
 # Chat Page (ui.py)
 if st.session_state['page'] == 'chat':
     ui.chat_page()
-
-
-
-# import streamlit as st
-
-# # Initialize an empty list to store courses
-# if 'courses' not in st.session_state:
-#     st.session_state['courses'] = []
-# if 'text' not in st.session_state:
-#     st.session_state['text'] = ''
-
-# # Reset the text field
-# def clear_text():
-#     st.session_state['text'] = '' 
-
-# # Input section for course details
-# st.title("Input Course Details")
-# course_name = st.text_input("Course Name", st.session_state['text'])
-# course_details = st.text_input("Course Details", st.session_state['text'])
-# course_semester = st.text_input("Course Semester", st.session_state['text'])
-
-# # Button to add the course
-# if st.button("Add Course"):
-#     if course_name and course_details and course_semester:
-#         st.session_state['courses'].append({
-#             "name": course_name,
-#             "details": course_details,
-#             "semester": course_semester
-#         })
-#         st.success(f"Added {course_name}")
-#         clear_text()
-#     else:
-#         st.error("Please fill in all fields.")
-
-# # Create tabs for each course
-# if st.session_state['courses']:
-#     st.title("Courses")
-#     course_tabs = st.tabs([course['name'] for course in st.session_state['courses']])
-
-#     # Display the course details in each tab
-#     for index, tab in enumerate(course_tabs):
-#         with tab:
-#             st.subheader(st.session_state['courses'][index]['name'])
-#             st.write(f"Details: {st.session_state['courses'][index]['details']}")
-#             st.write(f"Semester: {st.session_state['courses'][index]['semester']}")
-
-#             # Add a "Chat" button for each course tab
-#             if st.button(f"Chat for {st.session_state['courses'][index]['name']}"):
-#                 st.write(f"Chat started for {st.session_state['courses'][index]['name']}")
-
-
-    
-# # Based on that display course in individual tabs(TODO)
-
-
-# # If they click on that course it goes to a chat(ui.py) for that course name
-
-
-# # {"name": "ECEN 303", "details": "ECEN-303:200,501", "semester": "Fall 2024"},
-# #     {"name": "ECEN 370", "details": "ECEN 370 502", "semester": "Fall 2024"},
-# #     {"name": "ECEN 426", "details": "ECEN-426:501,700", "semester": "Fall 2024"},
-# #     {"name": "PHYS 217 Lec", "details": "ENGR-217:201,202", "semester": "Fall 2024"},
-# #     {"name": "PHYS 217 Multi", "details": "ENGR-217:201,202", "semester": "Fall 2024"},
-# #     {"name": "POLS 206", "details": "POLS-206:598,M99", "semester": "Fall 2024"},
-# #     {"name": "ECEN Undergraduate Advising", "details": "COMU-045-CAAG", "semester": "Fall 2024"}
