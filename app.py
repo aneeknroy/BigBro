@@ -74,10 +74,10 @@ if st.session_state['page'] == 'home':
 
         # Predefined class images
         class_images = {
-            "ECEN": "https://via.placeholder.com/150?text=ECEN",  # Placeholder URL for ECEN
+            "ECEN": "https://w7.pngwing.com/pngs/290/911/png-transparent-google-classroom-icon-hd-logo.png",  # Placeholder URL for ECEN
             "PHYS": "https://via.placeholder.com/150?text=PHYS",  # Placeholder URL for PHYS
             "POLS": "https://via.placeholder.com/150?text=POLS",  # Placeholder URL for POLS
-            "default": "https://via.placeholder.com/150?text=Class"  # Default placeholder image
+            "default": "https://w7.pngwing.com/pngs/290/911/png-transparent-google-classroom-icon-hd-logo.png"  # Default placeholder image
         }
 
         # Display course details in each tab

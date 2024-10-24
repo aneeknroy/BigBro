@@ -10,7 +10,7 @@ from langchain_community.embeddings import OllamaEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-TEXT_SPLITTER = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+TEXT_SPLITTER = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=20)
 
 
 def load_documents_into_database(model_name: str, documents_path: str) -> Chroma:

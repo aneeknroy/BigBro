@@ -114,6 +114,13 @@ def chat_page():
                     st.session_state[db_session_name],
                 )
                 response = st.write_stream(stream)
+                # Check if the response contains LaTeX
+                if "$$" in response:
+                    # Render LaTeX if detected
+                    st.latex(response)
+                else:
+                    # Otherwise, render as markdown
+                    st.markdown(response)
                 st.session_state[course_key].append({"role": "assistant", "content": response})
         except:
             st.error('You must index your uploaded docs before asking questions', icon="🚨")
